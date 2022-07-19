@@ -10,4 +10,12 @@ interface IuserSearch {
     limit: number;
 }
 
-export { IuserLogin, IuserSearch }
+interface socketUser {
+    _id: string;
+    socketId: string;
+    groups?: [];
+    email: string;
+    name: string;
+}
+
+export { IuserLogin, IuserSearch, socketUser }

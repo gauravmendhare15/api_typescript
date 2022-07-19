@@ -54,4 +54,18 @@ function isObject(obj: any) {
     return (typeof obj === "object" && !Array.isArray(obj) && obj !== null);
 }
 
-export { genrateJWT, generateOTP, generateRandomNumber, successObj, errorObj }
+function socketResponse(event: any, data: any) {
+    return {
+        event: event,
+        data: data
+    }
+}
+
+export {
+    genrateJWT,
+    generateOTP,
+    generateRandomNumber,
+    successObj,
+    errorObj,
+    socketResponse,
+}

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import { IUser } from "./../models/user";
+import * as  HelperUtils from "./../utils/helper"
 
 
 async function authenticate(req: any, res: any, next: any) {
@@ -15,7 +16,17 @@ async function authenticate(req: any, res: any, next: any) {
         res.status(401).send(error)
     }
 }
+async function verifySocket(socket: any, token: any) {
+    try {
+        if (!token) return (HelperUtils.errorObj("Access Denied No Token Found", {}));
+        let data = await jwt.verify(token, process.env.JWT_SECRET || "tsnodejs")
+        return (HelperUtils.successObj("Authorized", data))
+    } catch (error) {
+        console.log(error)
+        return HelperUtils.errorObj("something went wrong", error)
+    }
+}
 
-export { authenticate }
+export { authenticate, verifySocket }
 
 

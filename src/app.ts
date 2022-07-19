@@ -1,6 +1,7 @@
 import express from "express"
 import "dotenv/config"
 import { connectDB } from "./loaders/mongodb"
+import http from "http"
 const app = express()
 
 app.use(express.json())
@@ -14,30 +15,13 @@ import userRouter from "./routes/user"
 
 app.use(loggerMiddleware)
 app.use("/api/user", userRouter)
+const server = http.createServer(app);
+require("./loaders/initializesocket")(server)
 
 
 connectDB(process.env.MONGO_DB || "mongodb://localhost:27017/gaurav")
 //start server
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
 })
-
-
-
-/** 
-Promise.all([
-    connectDB(process.env.MONGO_DB || "mongodb://localhost:27017/gaurav")
-
-]).then(() => {
-    console.log("all things are ready")
-    //start server
-    const PORT = process.env.PORT || 3000
-    app.listen(PORT, () => {
-        console.log(`Server started on port ${PORT}`)
-    })
-}).catch((err) => {
-    console.log(err)
-    process.exit()
-})
-*/
