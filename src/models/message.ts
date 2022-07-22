@@ -9,6 +9,8 @@ export interface IMessage extends mongoose.Document {
     msg?: string,
     media?: Array<string>,
     isEdited: Boolean,
+    type: number,
+    sendtime: Number,
 
 }
 
@@ -20,6 +22,8 @@ const messgaeSchema = new Schema<IMessage>({
     msg: { type: String },
     media: [{ type: String }],
     isEdited: { type: Boolean, default: false },
+    type: { type: Number },
+    sendtime: { type: Number, default: Date.now() },
 }, {
     timestamps: true
 })

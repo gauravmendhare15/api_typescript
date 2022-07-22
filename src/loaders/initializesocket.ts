@@ -1,7 +1,8 @@
 import { Server } from 'socket.io';
 import * as authorization from "../middlewar/auth"
-import { UserCollection } from '../socketserver/userCollection';
+import UserCollection from '../socketserver/userCollection';
 import UserModel from '../socketserver/userService';
+import groupCollection from '../socketserver/groupCollection';
 
 // function 
 
@@ -22,8 +23,10 @@ class openSocket {
       let authorizedUser = await authorization.verifySocket(socket, socket.handshake.query.token)
       if (authorizedUser && authorizedUser.flag === true) {
         //add user into the userCollection Class
-        UserModel.getuserFromDB(authorizedUser.result._id, socket)
-        UserModel.setSocket(socket, socket.handshake.query.token)
+        let userId = authorizedUser.result._id
+        await UserModel.getuserFromDB(userId, socket)
+        await UserModel.setSocket(socket, socket.handshake.query.token)
+        await UserModel.addOnline(userId, socket)
 
       } // disconect socket and not valid token
 
@@ -36,7 +39,9 @@ class openSocket {
 
 
 module.exports = async (server: any) => {
+  groupCollection.initializeGroup();
   const io = new Server(server, { 'pingTimeout': 180000, 'pingInterval': 25000 })
+  UserModel.initializeSocketServer(io);
   let openSocketObj = new openSocket(io)
   await openSocketObj.openSocket1()
 }

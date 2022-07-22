@@ -13,7 +13,7 @@ interface IuserSearch {
 interface socketUser {
     _id: string;
     socketId: string;
-    groups?: [];
+    groups?: string[];
     email: string;
     name: string;
 }
